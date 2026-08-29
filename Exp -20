@@ -1,0 +1,6 @@
+age <- c(20,25,30,35,40)
+weight <- c(55,60,65,70,75)
+bp <- c(120,125,130,138,145)
+data <- data.frame(age, weight, bp)
+model <- lm(bp ~ age + weight, data=data)
+print(summary(model))

@@ -1,0 +1,4 @@
+x =5
+y =8
+z =7
+print(paste("Greatest is:", max(x, y, z)))

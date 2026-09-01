@@ -1,0 +1,11 @@
+x <- c(10, 20, 30, 40, 50)
+y <- c(15, 25, 35, 45, 55)
+model <- lm(y ~ x)
+summary(model)
+plot(x, y,
+     main = "Linear Regression",
+     xlab = "X values",
+     ylab = "Y values",
+     col = "blue",
+     pch = 19)
+abline(model, col = "red", lwd = 2)

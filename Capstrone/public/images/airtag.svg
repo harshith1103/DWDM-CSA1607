@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgAirTag" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="silverPlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <filter id="shadowAir" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background Wall -->
+  <rect width="600" height="450" fill="url(#bgAirTag)"/>
+  
+  <!-- Apple Find My Pulsing Radar Glow -->
+  <circle cx="300" cy="225" r="160" fill="#10b981" opacity="0.08" filter="blur(30px)"/>
+  <circle cx="300" cy="225" r="140" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.3" stroke-dasharray="6,6"/>
+  <circle cx="300" cy="225" r="190" fill="none" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+
+  <!-- AirTag 4-Pack Arrangement -->
+  <g filter="url(#shadowAir)">
+    <!-- AirTag 1 (Main Center) -->
+    <g transform="translate(300, 225)">
+      <!-- Outer White Curved Glossy Casing -->
+      <circle cx="0" cy="0" r="85" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <!-- Inner Stainless Steel Mirror Cap -->
+      <circle cx="0" cy="0" r="58" fill="url(#silverPlate)" stroke="#94a3b8" stroke-width="1.5"/>
+      <!-- Apple Logo Symbol -->
+      <path d="M 4 -12 C 1 -12, -4 -9, -4 -3 C -4 4, 3 10, 3 16 C 3 20, -1 25, -6 25 C -11 25, -13 22, -18 22 C -23 22, -26 25, -30 25 C -35 25, -40 19, -40 12 C -40 -2, -30 -10, -18 -10 C -12 -10, -7 -7, -3 -7 C 1 -7, 6 -12, 4 -12 Z" fill="#475569" transform="scale(0.7) translate(12, 0)"/>
+    </g>
+
+    <!-- AirTag 2 (Top Left) -->
+    <g transform="translate(180, 140) scale(0.75)">
+      <circle cx="0" cy="0" r="85" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="58" fill="url(#silverPlate)" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+
+    <!-- AirTag 3 (Top Right) -->
+    <g transform="translate(420, 140) scale(0.75)">
+      <circle cx="0" cy="0" r="85" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="58" fill="url(#silverPlate)" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+
+    <!-- AirTag 4 (Bottom Right) -->
+    <g transform="translate(410, 310) scale(0.75)">
+      <circle cx="0" cy="0" r="85" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="58" fill="url(#silverPlate)" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+  </g>
+
+  <!-- Precision Finding Badge Overlay -->
+  <g transform="translate(400, 35)">
+    <rect width="165" height="32" rx="16" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="1.5"/>
+    <text x="82.5" y="21" text-anchor="middle" fill="#34d399" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11">📍 FIND MY PRECISION</text>
+  </g>
+</svg>

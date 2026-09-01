@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgPB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="pbBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="60%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="pbGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="shadowPB" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background Wall -->
+  <rect width="600" height="450" fill="url(#bgPB)"/>
+
+  <!-- Energy Glow -->
+  <circle cx="300" cy="225" r="150" fill="#f59e0b" opacity="0.12" filter="blur(30px)"/>
+
+  <!-- Shadow Base -->
+  <ellipse cx="300" cy="380" rx="110" ry="16" fill="#000" opacity="0.5"/>
+
+  <!-- Anker Power Bank Tower -->
+  <g filter="url(#shadowPB)">
+    <!-- Main Matte Black Casing -->
+    <rect x="210" y="80" width="180" height="280" rx="28" fill="url(#pbBody)" stroke="#475569" stroke-width="2"/>
+
+    <!-- Smart Digital Screen Section (Top) -->
+    <rect x="230" y="105" width="140" height="110" rx="16" fill="#090d16" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Digital Display Battery Percentage & Wattage -->
+    <text x="300" y="160" text-anchor="middle" fill="#f59e0b" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="38" letter-spacing="-1">98%</text>
+    <text x="300" y="190" text-anchor="middle" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="14" letter-spacing="1">⚡ 140W MAX OUTPUT</text>
+
+    <!-- ANKER Gold Accent Stripe -->
+    <rect x="230" y="235" width="140" height="4" rx="2" fill="url(#pbGold)"/>
+
+    <!-- Anker Logo Text -->
+    <text x="300" y="265" text-anchor="middle" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="18" letter-spacing="3">ANKER</text>
+
+    <!-- USB-C Fast Charge Ports at Base -->
+    <rect x="250" y="300" width="40" height="14" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="310" y="300" width="40" height="14" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="270" y="326" width="60" height="14" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+  </g>
+
+  <!-- Fast Charging Badge Overlay -->
+  <g transform="translate(400, 35)">
+    <rect width="165" height="32" rx="16" fill="rgba(245, 158, 11, 0.2)" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="82.5" y="21" text-anchor="middle" fill="#fbbf24" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11">⚡ 24,000mAh FAST CHARGE</text>
+  </g>
+</svg>

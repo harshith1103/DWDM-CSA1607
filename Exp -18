@@ -1,0 +1,6 @@
+plot(x, y,
+     main = "Scatter Plot",
+     xlab = "X values",
+     ylab = "Y values",
+     col = "blue",
+     pch = 19)

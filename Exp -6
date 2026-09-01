@@ -1,0 +1,4 @@
+age <- c(26,27,28,29,30,90)
+mean(age)
+median(age)
+as.numeric(names(sort(table(age), decreasing = TRUE)[1]))

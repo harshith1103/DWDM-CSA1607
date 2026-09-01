@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradTherm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="thermFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <linearGradient id="displayArea" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="shadowTherm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Wall -->
+  <rect width="600" height="450" fill="url(#bgGradTherm)"/>
+
+  <!-- Ambient Glow -->
+  <circle cx="300" cy="225" r="140" fill="#06b6d4" opacity="0.12" filter="blur(30px)"/>
+
+  <!-- Smart Thermostat Device -->
+  <g filter="url(#shadowTherm)">
+    <!-- White Rounded Square Casing -->
+    <rect x="180" y="90" width="240" height="270" rx="36" fill="url(#thermFace)" stroke="#e2e8f0" stroke-width="3"/>
+
+    <!-- Black Digital Glass Display Screen -->
+    <rect x="205" y="115" width="190" height="220" rx="24" fill="url(#displayArea)" stroke="#334155" stroke-width="2"/>
+
+    <!-- Digital Temperature Text -->
+    <text x="300" y="215" text-anchor="middle" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="64" letter-spacing="-2">72°</text>
+
+    <!-- Target Set Temperature & Mode -->
+    <text x="300" y="250" text-anchor="middle" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="14" letter-spacing="1">COOLING TO 70°</text>
+    <text x="300" y="275" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="12">MODE: AUTO • ECO</text>
+
+    <!-- Up / Down Touch Controls -->
+    <path d="M 300 145 L 315 160 L 285 160 Z" fill="#06b6d4"/>
+    <path d="M 300 305 L 315 290 L 285 290 Z" fill="#64748b"/>
+
+    <!-- Alexa Built-in Ring Icon -->
+    <circle cx="300" cy="375" r="5" fill="#06b6d4"/>
+  </g>
+
+  <!-- ENERGY STAR Badge Overlay -->
+  <g transform="translate(410, 45)">
+    <rect width="150" height="32" rx="16" fill="rgba(6, 182, 212, 0.2)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="75" y="21" text-anchor="middle" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11">🌱 ENERGY STAR</text>
+  </g>
+</svg>

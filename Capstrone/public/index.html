@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoplytics | E-Commerce Recommendation, Behavior Analytics & Logistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon">
+                    <i class="ri-radar-line"></i>
+                </div>
+                <div class="brand-title">Shoplytics</div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-tab="dashboard">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>BI Analytics Hub</span>
+                </li>
+                <li class="menu-item" data-tab="apriori" style="display: none;">
+                    <i class="ri-git-branch-line"></i>
+                    <span>Apriori Rules</span>
+                </li>
+                <li class="menu-item" data-tab="rfm">
+                    <i class="ri-user-star-line"></i>
+                    <span>RFM & Predictive</span>
+                </li>
+                <li class="menu-item" data-tab="store">
+                    <i class="ri-shopping-bag-3-line"></i>
+                    <span>Customer Store</span>
+                </li>
+                <li class="menu-item" data-tab="my-orders">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>My Orders</span>
+                </li>
+                <li class="menu-item" data-tab="stock-management">
+                    <i class="ri-box-3-line"></i>
+                    <span>Stock Management</span>
+                </li>
+                <li class="menu-item" data-tab="admin">
+                    <i class="ri-admin-line"></i>
+                    <span>Admin Dispatch</span>
+                </li>
+                <li class="menu-item" data-tab="volunteer-portal" style="display: none;">
+                    <i class="ri-truck-line"></i>
+                    <span>Volunteer Portal</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="user-card" style="padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                        <div class="user-avatar" id="user-avatar-initials" style="flex-shrink: 0; font-size: 16px;">🔐</div>
+                        <div class="user-info" style="min-width: 0; flex: 1; overflow: hidden;">
+                            <div class="user-name" id="user-display-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; font-weight: 700; color: var(--text-bright);">Account</div>
+                            <div class="user-role" id="user-display-role" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px; color: var(--primary-cyan);">Not Signed In</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="btn-auth-trigger" style="padding: 5px 8px; font-size: 10px; flex-shrink: 0; white-space: nowrap;">
+                        <i class="ri-login-box-line"></i> Login / Sign Up
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="page-title">
+                    <h1 id="tab-heading">BI Analytics Overview</h1>
+                    <p id="tab-subheading">Star Schema Data Warehouse Performance & Customer Intelligence</p>
+                </div>
+                <div class="top-actions">
+                    <button class="btn btn-outline" id="btn-top-profile" onclick="openCustomerProfileModal()" style="font-size: 12px; padding: 6px 12px; border-color: rgba(6, 182, 212, 0.4); color: var(--primary-cyan);">
+                        <i class="ri-user-3-line"></i> 👤 My Profile
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportReport('excel')">
+                        <i class="ri-file-excel-2-line" style="color: #10b981;"></i>
+                        <span>Export Excel</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="exportReport('pdf')">
+                        <i class="ri-file-pdf-line"></i>
+                        <span>Export PDF</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 1. BI Analytics Dashboard View -->
+            <section id="view-dashboard" class="tab-view">
+                <!-- Filter Bar -->
+                <div class="glass-card filter-bar">
+                    <div class="filter-group">
+                        <label><i class="ri-filter-3-line"></i> Filter Category:</label>
+                        <select class="form-select" id="filter-category" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Home & Kitchen">Home & Kitchen</option>
+                            <option value="Fitness">Fitness</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Books">Books</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Demographics:</label>
+                        <select class="form-select" id="filter-gender" onchange="applyFilters()">
+                            <option value="">All Genders</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-Binary">Non-Binary</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Region:</label>
+                        <select class="form-select" id="filter-region" onchange="applyFilters()">
+                            <option value="">All Regions</option>
+                            <option value="North America">North America</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Asia-Pacific">Asia-Pacific</option>
+                            <option value="Latin America">Latin America</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="kpi-grid">
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon cyan"><i class="ri-money-dollar-circle-line"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">Total Revenue</div>
+                            <div class="kpi-value" id="kpi-revenue">$0</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon indigo"><i class="ri-shopping-cart-2-line"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">Total Transactions</div>
+                            <div class="kpi-value" id="kpi-orders">0</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon emerald"><i class="ri-calculator-line"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">Avg Order Value (AOV)</div>
+                            <div class="kpi-value" id="kpi-aov">$0</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon amber"><i class="ri-user-shared-line"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">Active Customers</div>
+                            <div class="kpi-value" id="kpi-customers">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Layout Grid -->
+                <div class="charts-grid">
+                    <div class="glass-card col-8">
+                        <div class="chart-header">
+                            <h3>Monthly Sales Revenue Trend (OLAP FactSales)</h3>
+                            <span class="badge badge-cyan">Star Schema Trend</span>
+                        </div>
+                        <div style="height: 280px;">
+                            <canvas id="chart-sales-trend"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card col-4">
+                        <div class="chart-header">
+                            <h3>Category Performance</h3>
+                            <span class="badge badge-emerald">Revenue Share</span>
+                        </div>
+                        <div style="height: 280px;">
+                            <canvas id="chart-category-perf"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card col-6">
+                        <div class="chart-header">
+                            <h3>Demographic Revenue Breakdown</h3>
+                            <span class="badge badge-indigo">Age & Gender</span>
+                        </div>
+                        <div style="height: 250px;">
+                            <canvas id="chart-demographics"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card col-6">
+                        <div class="chart-header">
+                            <h3>Top Popular Products</h3>
+                            <span class="badge badge-amber">By Revenue</span>
+                        </div>
+                        <div style="height: 250px;">
+                            <canvas id="chart-top-products"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Apriori Recommendation Rules View -->
+            <section id="view-apriori" class="tab-view" style="display: none;">
+                <div class="glass-card" style="margin-bottom: 24px;">
+                    <div class="chart-header">
+                        <h3>Apriori Association Mining Engine</h3>
+                        <span class="badge badge-cyan">Association Rule Miner</span>
+                    </div>
+                    <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 220px;">
+                            <label style="font-size: 13px; color: var(--text-muted);">Minimum Support Threshold: <strong id="val-support" style="color: var(--primary-cyan);">0.03</strong></label>
+                            <input type="range" id="input-support" min="0.01" max="0.15" step="0.01" value="0.03" style="width: 100%; margin-top: 8px;" oninput="document.getElementById('val-support').innerText = this.value">
+                        </div>
+                        <div style="flex: 1; min-width: 220px;">
+                            <label style="font-size: 13px; color: var(--text-muted);">Minimum Confidence Threshold: <strong id="val-confidence" style="color: var(--primary-indigo);">0.25</strong></label>
+                            <input type="range" id="input-confidence" min="0.10" max="0.80" step="0.05" value="0.25" style="width: 100%; margin-top: 8px;" oninput="document.getElementById('val-confidence').innerText = this.value">
+                        </div>
+                        <button class="btn btn-primary" onclick="reMineApriori()">
+                            <i class="ri-refresh-line"></i> Run Apriori Mining
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="chart-header">
+                        <h3>Mined Association Rules (Antecedents ➔ Consequents)</h3>
+                        <div id="rules-count-badge" class="badge badge-emerald">0 Rules Found</div>
+                    </div>
+                    <div class="table-container">
+                        <table class="custom-table" id="table-apriori-rules">
+                            <thead>
+                                <tr>
+                                    <th>If Customer Buys (Antecedent A)</th>
+                                    <th>Recommend Item (Consequent B)</th>
+                                    <th>Support P(A ∩ B)</th>
+                                    <th>Confidence P(B|A)</th>
+                                    <th>Lift Score</th>
+                                    <th>Rule Strength</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic Rules -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. RFM Customer Behavior & Predictive Analytics View -->
+            <section id="view-rfm" class="tab-view" style="display: none;">
+                <div class="charts-grid">
+                    <div class="glass-card col-6">
+                        <div class="chart-header">
+                            <h3>RFM Customer Segment Distribution</h3>
+                            <span class="badge badge-indigo">Segmentation</span>
+                        </div>
+                        <div style="height: 260px;">
+                            <canvas id="chart-rfm-segments"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card col-6">
+                        <div class="chart-header">
+                            <h3>Predictive Churn Risk vs. Purchase Propensity</h3>
+                            <span class="badge badge-rose">Predictive ML</span>
+                        </div>
+                        <div style="height: 260px;">
+                            <canvas id="chart-churn-risk"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="chart-header">
+                        <h3>Customer RFM & Predictive Risk Table</h3>
+                        <span class="badge badge-amber">Behavior Intelligence</span>
+                    </div>
+                    <div class="table-container">
+                        <table class="custom-table" id="table-rfm-customers">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Recency</th>
+                                    <th>Frequency</th>
+                                    <th>Monetary ($)</th>
+                                    <th>RFM Segment</th>
+                                    <th>Churn Risk %</th>
+                                    <th>Purchase Likelihood %</th>
+                                    <th>Action Alert</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Customer Shopping Store View -->
+            <section id="view-store" class="tab-view" style="display: none;">
+                <!-- Amazon-style Header: Search Bar & Shop by Category Pill Navigation -->
+                <div class="glass-card" style="margin-bottom: 20px; padding: 16px; border-color: rgba(6, 182, 212, 0.2);">
+                    <!-- Amazon Search Input -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                        <div style="position: relative; flex: 1;">
+                            <input type="text" class="form-input" id="store-search-input" style="width: 100%; padding-left: 38px; height: 42px; font-size: 13px;" placeholder="Search Amazon-style Catalog (e.g. Echo Dot, iPhone 15, Kindle, Fire TV, Headphones)..." oninput="filterStoreProducts()">
+                            <i class="ri-search-line" style="position: absolute; left: 12px; top: 12px; font-size: 18px; color: var(--primary-cyan);"></i>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0 20px;" onclick="filterStoreProducts()">
+                            <i class="ri-search-2-line"></i> Search
+                        </button>
+                    </div>
+
+                    <!-- Shop by Category Pills -->
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                            <i class="ri-store-2-line" style="color: #f59e0b;"></i> Shop by Category (Amazon Departments):
+                        </div>
+                        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;" id="category-pills-container">
+                            <button class="btn btn-outline category-pill active" data-category="ALL" onclick="selectStoreCategory('ALL', this)">
+                                🛒 All Departments
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Mobiles & Computers" onclick="selectStoreCategory('Mobiles & Computers', this)">
+                                📱 Mobiles & Computers
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="TV & Electronics" onclick="selectStoreCategory('TV & Electronics', this)">
+                                📺 TV & Electronics
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Echo & Alexa / Devices" onclick="selectStoreCategory('Echo & Alexa / Devices', this)">
+                                🔊 Echo & Alexa / Devices
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Kindle & Books" onclick="selectStoreCategory('Kindle & Books', this)">
+                                📖 Kindle & Books
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Fashion & Apparel" onclick="selectStoreCategory('Fashion & Apparel', this)">
+                                👗 Fashion & Apparel
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Home & Kitchen" onclick="selectStoreCategory('Home & Kitchen', this)">
+                                🍳 Home & Kitchen
+                            </button>
+                            <button class="btn btn-outline category-pill" data-category="Fitness & Outdoors" onclick="selectStoreCategory('Fitness & Outdoors', this)">
+                                🏋️ Fitness & Outdoors
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px;">
+                    <!-- Product Catalog Grid -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <h3 id="store-catalog-title" style="font-size: 16px;">Product Catalog</h3>
+                            <span class="badge badge-cyan" id="store-product-count">0 Products</span>
+                        </div>
+                        <div class="product-grid" id="store-product-grid">
+                            <!-- Dynamic Products -->
+                        </div>
+                    </div>
+
+
+                    <!-- Cart & Apriori Recommendations Side Panel -->
+                    <div>
+                        <div class="glass-card" style="margin-bottom: 20px;">
+                            <div class="chart-header">
+                                <h3>Shopping Cart</h3>
+                                <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="clearCart()">Clear</button>
+                            </div>
+                            <div id="cart-items-container" style="min-height: 120px; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="color: var(--text-dim); font-size: 13px; text-align: center; margin-top: 30px;">Your cart is empty</div>
+                            </div>
+                            <div style="border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px; display: flex; justify-content: space-between; font-weight: 700;">
+                                <span>Total Amount:</span>
+                                <span id="cart-total-price" style="color: var(--primary-cyan);">$0.00</span>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;" onclick="openCheckoutModal()">
+                                <i class="ri-shopping-cart-checkout-line"></i> Proceed to Checkout
+                            </button>
+
+                            <!-- Saved for Later Section -->
+                            <div id="saved-for-later-section" style="margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="font-size: 13px; color: #f59e0b;">
+                                        <i class="ri-bookmark-line"></i> Saved for Later (<span id="saved-for-later-count">0</span>)
+                                    </strong>
+                                </div>
+                                <div id="saved-for-later-container" style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="color: var(--text-dim); font-size: 12px; text-align: center;">No items saved for later</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Apriori Recommendation Box -->
+                        <div class="glass-card" style="border-color: var(--primary-cyan);">
+                            <div class="chart-header">
+                                <h3><i class="ri-magic-line" style="color: var(--primary-cyan);"></i> Frequently Bought Together</h3>
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Personalized item suggestions powered by Apriori association rules</p>
+                            <div id="apriori-recommendations-container" style="display: flex; flex-direction: column; gap: 10px;">
+                                <!-- Dynamic Recommendations -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. My Customer Orders Tracking View -->
+            <section id="view-my-orders" class="tab-view" style="display: none;">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Order History & Live Delivery Tracking</h3>
+                        <button class="btn btn-outline" onclick="loadCustomerOrders()"><i class="ri-refresh-line"></i> Refresh Status</button>
+                    </div>
+                    <div id="customer-orders-container">
+                        <!-- Dynamic Customer Orders -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Admin Management Portal View -->
+            <section id="view-admin" class="tab-view" style="display: none;">
+                <!-- Admin Sub-Navigation Header -->
+                <div class="glass-card" style="margin-bottom: 20px; padding: 10px 14px; border-color: rgba(6, 182, 212, 0.3);">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="admin-subnav-container">
+                        <button class="btn btn-outline admin-subtab active" data-subtab="orders" onclick="switchAdminSubTab('orders', this)">
+                            <i class="ri-route-line"></i> Order Dispatcher
+                        </button>
+                        <button class="btn btn-outline admin-subtab" data-subtab="olap" onclick="switchAdminSubTab('olap', this)">
+                            <i class="ri-database-2-line" style="color: var(--primary-cyan);"></i> Data Architecture & OLAP
+                        </button>
+                        <button class="btn btn-outline admin-subtab" data-subtab="apriori" onclick="switchAdminSubTab('apriori', this)">
+                            <i class="ri-git-branch-line" style="color: #f59e0b;"></i> Apriori Mining
+                        </button>
+                        <button class="btn btn-outline admin-subtab" data-subtab="stock" onclick="switchAdminSubTab('stock', this)">
+                            <i class="ri-box-3-line" style="color: var(--accent-emerald);"></i> Catalog & Stock
+                        </button>
+                        <button class="btn btn-outline admin-subtab" data-subtab="etl" onclick="switchAdminSubTab('etl', this)">
+                            <i class="ri-restart-line" style="color: var(--accent-rose);"></i> ETL & System Logs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 1: Order Dispatcher & Volunteer Assignment -->
+                <div id="admin-subtab-orders" class="admin-subtab-view">
+                    <div class="glass-card" style="border-color: var(--primary-indigo);">
+                        <div class="chart-header">
+                            <h3><i class="ri-route-line" style="color: var(--primary-cyan);"></i> Customer Order Dispatcher & Volunteer Assignment</h3>
+                            <button class="btn btn-secondary" onclick="loadAdminOrders()"><i class="ri-refresh-line"></i> Refresh Dispatch List</button>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">View customer delivery locations, total amounts, and assign registered volunteers for pickup & delivery logistics.</p>
+                        <div class="table-container">
+                            <table class="custom-table" id="table-admin-orders">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Ordered Products & Real-Time Warehouse Stock</th>
+                                        <th>Delivery Location / Address</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Assign Volunteer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Order Dispatcher Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 2: Data Warehouse Star Schema & Interactive OLAP Engine -->
+                <div id="admin-subtab-olap" class="admin-subtab-view" style="display: none;">
+                    <!-- Data Architecture & Interactive Schema Engine Header Card -->
+                    <div class="glass-card" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(6, 40, 35, 0.75), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(16, 185, 129, 0.35);">
+                        <div style="margin-bottom: 16px;">
+                            <h2 style="font-size: 22px; font-weight: 800; color: #f59e0b; margin-bottom: 6px; font-family: 'Inter', sans-serif;">
+                                Data Architecture — Shoplytics Analytics
+                            </h2>
+                            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
+                                Data Warehousing & Mining project — click a schema type below to view its structure
+                            </p>
+                        </div>
+
+                        <!-- Mode Selector Tab Buttons -->
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button class="btn data-arch-tab active" data-archtab="star" style="background: linear-gradient(135deg, #d97706, #f59e0b); border-color: #f59e0b; color: #0f172a; font-weight: 800; padding: 7px 18px; border-radius: 20px; font-size: 12px;" onclick="switchDataArchTab('star', this)">
+                                <i class="ri-star-fill"></i> Star Schema
+                            </button>
+                            <button class="btn data-arch-tab" data-archtab="snowflake" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: var(--text-bright); padding: 7px 18px; border-radius: 20px; font-size: 12px;" onclick="switchDataArchTab('snowflake', this)">
+                                <i class="ri-git-merge-line"></i> Snowflake Schema
+                            </button>
+                            <button class="btn data-arch-tab" data-archtab="olapcube" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: var(--text-bright); padding: 7px 18px; border-radius: 20px; font-size: 12px;" onclick="switchDataArchTab('olapcube', this)">
+                                <i class="ri-box-3-fill"></i> 3D OLAP Cube
+                            </button>
+                            <button class="btn data-arch-tab" data-archtab="knime" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: var(--text-bright); padding: 7px 18px; border-radius: 20px; font-size: 12px;" onclick="switchDataArchTab('knime', this)">
+                                <i class="ri-flow-chart"></i> KNIME Workflows
+                            </button>
+                        </div>
+
+                        <!-- VIEW 1: STAR SCHEMA -->
+                        <div id="arch-view-star" class="arch-view-container" style="display: block;">
+                            <h4 style="color: var(--text-bright); font-size: 16px; font-weight: 700; margin-bottom: 4px;">Star Schema</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                                One central fact table directly connected to denormalized dimension tables — fastest for querying, simplest to understand.
+                            </p>
+
+                            <!-- Diagram Grid -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: stretch;">
+                                <!-- Central Fact Table -->
+                                <div style="background: rgba(217, 119, 6, 0.12); border: 2px solid #f59e0b; border-radius: 10px; padding: 14px; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15); grid-column: span 2;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(245, 158, 11, 0.3); padding-bottom: 8px; margin-bottom: 10px;">
+                                        <strong style="color: #f59e0b; font-size: 15px;"><i class="ri-table-2"></i> FACT_SALES (Central Fact Table)</strong>
+                                        <span class="badge badge-amber">Measures & FKs</span>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+                                        <div>
+                                            <div style="color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; margin-bottom: 4px;">🔑 Foreign Keys:</div>
+                                            <ul style="padding-left: 14px; margin: 0; color: var(--text-bright);">
+                                                <li><code>DateKey</code> (FK ➔ DimDate)</li>
+                                                <li><code>CustomerKey</code> (FK ➔ DimCustomer)</li>
+                                                <li><code>ProductKey</code> (FK ➔ DimProduct)</li>
+                                                <li><code>SessionID</code> (FK ➔ DimBehavior)</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; margin-bottom: 4px;">📊 Fact Measures:</div>
+                                            <ul style="padding-left: 14px; margin: 0; color: var(--accent-emerald);">
+                                                <li><code>Quantity</code> (Units Sold)</li>
+                                                <li><code>UnitPrice</code> ($ Unit Price)</li>
+                                                <li><code>Discount</code> ($ Discount)</li>
+                                                <li><code>TotalAmount</code> (Revenue $)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- DimCustomer -->
+                                <div style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 10px; padding: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <strong style="color: #8b5cf6; font-size: 13px;"><i class="ri-user-3-line"></i> DIM_CUSTOMER</strong>
+                                        <span class="badge badge-indigo">Dimension</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">
+                                        <div><code>CustomerKey</code> (PK)</div>
+                                        <div><code>FullName</code>, <code>Email</code></div>
+                                        <div><code>Age</code>, <code>Gender</code>, <code>Region</code></div>
+                                        <div><code>CustomerSegment</code></div>
+                                    </div>
+                                </div>
+
+                                <!-- DimProduct -->
+                                <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 10px; padding: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <strong style="color: var(--primary-cyan); font-size: 13px;"><i class="ri-shopping-bag-3-line"></i> DIM_PRODUCT</strong>
+                                        <span class="badge badge-cyan">Dimension</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">
+                                        <div><code>ProductKey</code> (PK)</div>
+                                        <div><code>ProductName</code>, <code>Category</code></div>
+                                        <div><code>Brand</code>, <code>Price</code></div>
+                                        <div><code>StockQuantity</code></div>
+                                    </div>
+                                </div>
+
+                                <!-- DimDate -->
+                                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 10px; padding: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <strong style="color: var(--accent-emerald); font-size: 13px;"><i class="ri-calendar-event-line"></i> DIM_TIME / DATE</strong>
+                                        <span class="badge badge-emerald">Dimension</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">
+                                        <div><code>DateKey</code> (PK)</div>
+                                        <div><code>FullDate</code>, <code>DayOfWeek</code></div>
+                                        <div><code>Month</code>, <code>Quarter</code>, <code>Year</code></div>
+                                        <div><code>IsWeekend</code></div>
+                                    </div>
+                                </div>
+
+                                <!-- DimBehavior -->
+                                <div style="background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 10px; padding: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <strong style="color: var(--accent-rose); font-size: 13px;"><i class="ri-radar-line"></i> DIM_BEHAVIOR</strong>
+                                        <span class="badge badge-rose">Dimension</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">
+                                        <div><code>SessionID</code> (PK)</div>
+                                        <div><code>SessionDurationSec</code></div>
+                                        <div><code>PageViews</code>, <code>DeviceType</code></div>
+                                        <div><code>CartAdditions</code></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VIEW 2: SNOWFLAKE SCHEMA -->
+                        <div id="arch-view-snowflake" class="arch-view-container" style="display: none;">
+                            <h4 style="color: var(--text-bright); font-size: 16px; font-weight: 700; margin-bottom: 4px;">Snowflake Schema</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                                Dimension tables are normalized into sub-dimension hierarchies — removes data redundancy and optimizes storage structure.
+                            </p>
+
+                            <!-- Hierarchy Cards Layout -->
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <!-- Customer Hierarchy Branch -->
+                                <div style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                    <div style="font-size: 11px; font-weight: 700; color: #8b5cf6; text-transform: uppercase; margin-bottom: 10px;">
+                                        👤 CUSTOMER DEMOGRAPHIC HIERARCHY BRANCH (Normalized):
+                                    </div>
+                                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                        <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: #8b5cf6; font-size: 12px;">DIM_REGION</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">RegionID (PK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">RegionName (North/South/East/West)</div>
+                                        </div>
+                                        <div style="color: var(--primary-cyan); font-size: 18px;">➔</div>
+                                        <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: #8b5cf6; font-size: 12px;">DIM_STATE</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">StateID (PK), RegionID (FK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">StateName, PostalCodeRange</div>
+                                        </div>
+                                        <div style="color: var(--primary-cyan); font-size: 18px;">➔</div>
+                                        <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: #8b5cf6; font-size: 12px;">DIM_CUSTOMER</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">CustomerKey (PK), StateID (FK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">FullName, Email, Segment</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Product Hierarchy Branch -->
+                                <div style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--primary-cyan); text-transform: uppercase; margin-bottom: 10px;">
+                                        📦 PRODUCT CATALOG HIERARCHY BRANCH (Normalized):
+                                    </div>
+                                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                        <div style="background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: var(--primary-cyan); font-size: 12px;">DIM_CATEGORY</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">CategoryID (PK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">CategoryName (Electronics / Home)</div>
+                                        </div>
+                                        <div style="color: var(--primary-cyan); font-size: 18px;">➔</div>
+                                        <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: var(--primary-cyan); font-size: 12px;">DIM_BRAND</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">BrandID (PK), CategoryID (FK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">BrandName, Manufacturer</div>
+                                        </div>
+                                        <div style="color: var(--primary-cyan); font-size: 18px;">➔</div>
+                                        <div style="background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2); padding: 10px; border-radius: 8px; flex: 1; min-width: 160px;">
+                                            <strong style="color: var(--primary-cyan); font-size: 12px;">DIM_PRODUCT</strong>
+                                            <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">ProductKey (PK), BrandID (FK)</div>
+                                            <div style="font-size: 10px; color: var(--text-muted);">ProductName, Price, Stock</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VIEW 3: 3D OLAP CUBE -->
+                        <div id="arch-view-olapcube" class="arch-view-container" style="display: none;">
+                            <h4 style="color: var(--text-bright); font-size: 16px; font-weight: 700; margin-bottom: 4px;">OLAP Cube</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                                A real 3D cube — spinning automatically. Click any face to pause rotation and expand that dimension's details.
+                            </p>
+
+                            <!-- Top Section: 3D Cube (Left) & Face Details Panel (Right) -->
+                            <div style="display: grid; grid-template-columns: minmax(220px, 280px) 1fr; gap: 24px; align-items: center; margin-bottom: 24px;">
+                                <!-- 3D Cube Stage -->
+                                <div class="olap-cube-scene">
+                                    <div class="olap-cube-3d" id="olap-3d-cube-object">
+                                        <div class="olap-cube-face olap-face-front" onclick="selectOlapCubeFace('Customer', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">👤</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Customer axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Region • Segment • Age</span>
+                                        </div>
+                                        <div class="olap-cube-face olap-face-back" onclick="selectOlapCubeFace('Product', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">📦</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Product axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Category • Brand • Item</span>
+                                        </div>
+                                        <div class="olap-cube-face olap-face-right" onclick="selectOlapCubeFace('Measures', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">💵</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Category / Revenue axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Sales • Discount • Subtotal</span>
+                                        </div>
+                                        <div class="olap-cube-face olap-face-left" onclick="selectOlapCubeFace('Channel', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">🏬</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Channel / Hub axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Web • Mobile • Hub</span>
+                                        </div>
+                                        <div class="olap-cube-face olap-face-top" onclick="selectOlapCubeFace('Time', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">📅</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Time axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Year • Quarter • Month</span>
+                                        </div>
+                                        <div class="olap-cube-face olap-face-bottom" onclick="selectOlapCubeFace('Behavior', this)">
+                                            <span style="font-size: 24px; margin-bottom: 4px;">⚡</span>
+                                            <strong style="font-size: 13px; color: #ffffff;">Behavior axis</strong>
+                                            <span style="font-size: 9px; color: rgba(255,255,255,0.8); margin-top: 2px;">Duration • Views • Cart</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Face Detail Output Panel -->
+                                <div id="olap-cube-details-panel" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; min-height: 180px;">
+                                    <h4 style="color: #f59e0b; font-size: 17px; font-weight: 800; font-family: 'Inter', serif, sans-serif; margin-bottom: 8px;">
+                                        Click a face to explore
+                                    </h4>
+                                    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+                                        Each face of this cube represents one analysis dimension. Real OLAP cubes let you <strong>"slice"</strong> (fix one dimension), <strong>"dice"</strong> (select a sub-cube), and <strong>"drill down"</strong> (go from Region ➔ State ➔ Customer, or Year ➔ Quarter ➔ Month) to explore data at any level of detail.
+                                    </p>
+                                    <div style="font-size: 12px; color: var(--text-dim); background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+                                        🔄 Cube auto-rotates in 3D space. Click any colored face to pause rotation and read details.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Section: Dynamic OLAP Cube Query Engine (Full Width 100%) -->
+                            <div style="border-top: 1px dashed var(--border-color); padding-top: 20px; margin-top: 10px;">
+                                <div class="chart-header">
+                                    <h3><i class="ri-dashboard-2-line" style="color: var(--primary-cyan);"></i> Dynamic OLAP Cube Query Engine</h3>
+                                    <span class="badge badge-cyan">ROLL-UP | DRILL-DOWN | SLICE | DICE | PIVOT</span>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Execute core multidimensional cube analytical operations against the Star Schema Data Warehouse.</p>
+
+                                <!-- Operation Control Buttons Bar -->
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;" id="olap-op-buttons">
+                                    <button class="btn btn-outline olap-op-btn active" data-op="ROLLUP" onclick="runOlapQuery('ROLLUP', this)">
+                                        🔼 ROLL-UP (Year Level)
+                                    </button>
+                                    <button class="btn btn-outline olap-op-btn" data-op="DRILLDOWN" onclick="runOlapQuery('DRILLDOWN', this)">
+                                        🔽 DRILL-DOWN (Year ➔ Month)
+                                    </button>
+                                    <button class="btn btn-outline olap-op-btn" data-op="SLICE" onclick="runOlapQuery('SLICE', this)">
+                                        ✂️ SLICE (By Category)
+                                    </button>
+                                    <button class="btn btn-outline olap-op-btn" data-op="DICE" onclick="runOlapQuery('DICE', this)">
+                                        🎲 DICE (Category × Region)
+                                    </button>
+                                    <button class="btn btn-outline olap-op-btn" data-op="PIVOT" onclick="runOlapQuery('PIVOT', this)">
+                                        🔄 PIVOT (Category × Quarters)
+                                    </button>
+                                </div>
+
+                                <!-- Parameter Selectors Bar (for Slice & Dice) -->
+                                <div style="display: flex; gap: 14px; flex-wrap: wrap; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border-color); align-items: center;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <label style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Slice Category:</label>
+                                        <select class="form-select" id="olap-slice-cat" style="font-size: 11px; padding: 4px 8px;" onchange="runOlapQuery('SLICE')">
+                                            <option value="Electronics">Electronics</option>
+                                            <option value="Home & Kitchen">Home & Kitchen</option>
+                                            <option value="Fitness">Fitness</option>
+                                            <option value="Fashion">Fashion</option>
+                                            <option value="Books">Books</option>
+                                            <option value="Mobiles & Computers">Mobiles & Computers</option>
+                                            <option value="TV & Electronics">TV & Electronics</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <label style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Dice Region:</label>
+                                        <select class="form-select" id="olap-dice-region" style="font-size: 11px; padding: 4px 8px;" onchange="runOlapQuery('DICE')">
+                                            <option value="North America">North America</option>
+                                            <option value="Europe">Europe</option>
+                                            <option value="Asia-Pacific">Asia-Pacific</option>
+                                            <option value="Latin America">Latin America</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-left: auto; font-size: 11px; color: var(--primary-cyan); font-weight: 700;" id="olap-query-status">
+                                        Active Operation: ROLLUP
+                                    </div>
+                                </div>
+
+                                    <!-- Results Split Grid: Chart + Table -->
+                                    <div class="charts-grid">
+                                        <div class="glass-card col-6">
+                                            <div class="chart-header">
+                                                <h4 style="font-size: 14px;">OLAP Cube Aggregation Chart</h4>
+                                                <span class="badge badge-emerald" id="olap-chart-badge">Visualization</span>
+                                            </div>
+                                            <div style="height: 280px;">
+                                                <canvas id="chart-admin-olap"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="glass-card col-6">
+                                            <div class="chart-header">
+                                                <h4 style="font-size: 14px;">Aggregated OLAP Query Result Set</h4>
+                                                <span class="badge badge-cyan" id="olap-rows-count">0 Rows</span>
+                                            </div>
+                                            <div class="table-container" style="max-height: 280px; overflow-y: auto;">
+                                                <table class="custom-table" id="table-admin-olap">
+                                                    <thead id="thead-admin-olap">
+                                                        <tr>
+                                                            <th>Dimension</th>
+                                                            <th>Total Orders</th>
+                                                            <th>Total Revenue ($)</th>
+                                                            <th>Total Units Sold</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbody-admin-olap">
+                                                        <!-- Dynamic OLAP Rows -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VIEW 4: KNIME WORKFLOWS -->
+                        <div id="arch-view-knime" class="arch-view-container" style="display: none;">
+                            <h4 style="color: var(--text-bright); font-size: 16px; font-weight: 700; margin-bottom: 4px;">KNIME Workflows</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                                The actual ETL and data-mining pipelines built in KNIME to clean the raw Excel data and prepare it for this warehouse.
+                            </p>
+
+                            <h5 style="color: #f59e0b; font-size: 14px; font-weight: 700; margin-bottom: 8px;">Data Cleaning Pipelines</h5>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+                                The same 5-node cleaning pattern was applied separately to each of the raw datasets before loading them into the SQLite database.
+                            </p>
+
+                            <!-- Node Pipeline Grid -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; align-items: center; margin-bottom: 20px;">
+                                <div class="knime-node-box" style="border-top: 3px solid #f59e0b;">
+                                    <div style="font-size: 10px; color: #f59e0b; font-weight: 800; text-transform: uppercase;">Node 1</div>
+                                    <strong style="font-size: 12px; color: var(--text-bright);">📥 Excel Reader</strong>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Loads raw Excel file data</div>
+                                </div>
+
+                                <div style="text-align: center; color: var(--primary-cyan); font-weight: 800;">➔</div>
+
+                                <div class="knime-node-box" style="border-top: 3px solid var(--primary-cyan);">
+                                    <div style="font-size: 10px; color: var(--primary-cyan); font-weight: 800; text-transform: uppercase;">Node 2</div>
+                                    <strong style="font-size: 12px; color: var(--text-bright);">✂️ Column Filter</strong>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Keeps required target columns</div>
+                                </div>
+
+                                <div style="text-align: center; color: var(--primary-cyan); font-weight: 800;">➔</div>
+
+                                <div class="knime-node-box" style="border-top: 3px solid var(--accent-emerald);">
+                                    <div style="font-size: 10px; color: var(--accent-emerald); font-weight: 800; text-transform: uppercase;">Node 3</div>
+                                    <strong style="font-size: 12px; color: var(--text-bright);">🧹 Duplicate Filter</strong>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Removes duplicate rows</div>
+                                </div>
+
+                                <div style="text-align: center; color: var(--primary-cyan); font-weight: 800;">➔</div>
+
+                                <div class="knime-node-box" style="border-top: 3px solid #8b5cf6;">
+                                    <div style="font-size: 10px; color: #8b5cf6; font-weight: 800; text-transform: uppercase;">Node 4</div>
+                                    <strong style="font-size: 12px; color: var(--text-bright);">🔀 Sorter</strong>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Sorts by Primary Key ID</div>
+                                </div>
+
+                                <div style="text-align: center; color: var(--primary-cyan); font-weight: 800;">➔</div>
+
+                                <div class="knime-node-box" style="border-top: 3px solid var(--accent-rose);">
+                                    <div style="font-size: 10px; color: var(--accent-rose); font-weight: 800; text-transform: uppercase;">Node 5</div>
+                                    <strong style="font-size: 12px; color: var(--text-bright);">💾 Excel Writer</strong>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Exports cleaned database file</div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- Sub-tab 3: Apriori Association Rule Mining Controller & Simulator -->
+                <div id="admin-subtab-apriori" class="admin-subtab-view" style="display: none;">
+                    <div class="glass-card" style="margin-bottom: 24px;">
+                        <div class="chart-header">
+                            <h3><i class="ri-git-branch-line" style="color: #f59e0b;"></i> Apriori Association Rule Mining Controller</h3>
+                            <span class="badge badge-amber">Market Basket Miner</span>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Mine frequent itemsets and generate association rules $A \Rightarrow B$ based on Support, Confidence, and Lift metrics.</p>
+
+                        <!-- Threshold Sliders & Action -->
+                        <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="font-size: 12px; color: var(--text-muted);">Minimum Support $P(A \cap B)$: <strong id="val-admin-support" style="color: var(--primary-cyan);">0.03</strong></label>
+                                <input type="range" id="input-admin-support" min="0.01" max="0.15" step="0.01" value="0.03" style="width: 100%; margin-top: 8px;" oninput="document.getElementById('val-admin-support').innerText = this.value">
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="font-size: 12px; color: var(--text-muted);">Minimum Confidence $P(B|A)$: <strong id="val-admin-confidence" style="color: var(--primary-indigo);">0.25</strong></label>
+                                <input type="range" id="input-admin-confidence" min="0.10" max="0.80" step="0.05" value="0.25" style="width: 100%; margin-top: 8px;" oninput="document.getElementById('val-admin-confidence').innerText = this.value">
+                            </div>
+                            <button class="btn btn-primary" onclick="runAdminAprioriMining()">
+                                <i class="ri-refresh-line"></i> Run Apriori Mining Engine
+                            </button>
+                        </div>
+
+                        <!-- Mined Association Rules Table & Chart Grid -->
+                        <div class="charts-grid">
+                            <div class="glass-card col-7">
+                                <div class="chart-header">
+                                    <h4 style="font-size: 14px;">Mined Association Rules (If Customer Buys A ➔ Recommend B)</h4>
+                                    <div id="admin-rules-count-badge" class="badge badge-emerald">0 Rules Mined</div>
+                                </div>
+                                <div class="table-container" style="max-height: 320px; overflow-y: auto;">
+                                    <table class="custom-table" id="table-admin-apriori-rules">
+                                        <thead>
+                                            <tr>
+                                                <th>Antecedent (Item A)</th>
+                                                <th>Consequent (Item B)</th>
+                                                <th>Support %</th>
+                                                <th>Confidence %</th>
+                                                <th>Lift Score</th>
+                                                <th>Strength</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic Mined Rules -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="glass-card col-5">
+                                <div class="chart-header">
+                                    <h4 style="font-size: 14px;">Top Rule Lift Scores & Strength</h4>
+                                    <span class="badge badge-indigo">Lift Distribution</span>
+                                </div>
+                                <div style="height: 280px;">
+                                    <canvas id="chart-admin-apriori"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Market Basket Cross-Sell Simulator -->
+                        <div class="glass-card" style="margin-top: 20px; border-color: rgba(245, 158, 11, 0.3);">
+                            <div class="chart-header">
+                                <h4 style="font-size: 14px;"><i class="ri-shopping-basket-2-line" style="color: #f59e0b;"></i> Interactive Market Basket Cross-Sell Tester</h4>
+                                <span class="badge badge-amber">Real-Time Recommendation Simulator</span>
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select products in a simulated cart basket to test which Apriori association rules trigger and what recommendations are output to the customer.</p>
+                            
+                            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                                <select class="form-select" id="sim-basket-product-1" style="font-size: 11px; padding: 6px 10px; flex: 1; min-width: 180px;">
+                                    <option value="">-- Select Product 1 --</option>
+                                </select>
+                                <select class="form-select" id="sim-basket-product-2" style="font-size: 11px; padding: 6px 10px; flex: 1; min-width: 180px;">
+                                    <option value="">-- Select Product 2 (Optional) --</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="simulateAprioriBasket()">
+                                    <i class="ri-magic-line"></i> Test Apriori Recommendations
+                                </button>
+                            </div>
+
+                            <div id="sim-results-container" style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div style="font-size: 12px; color: var(--text-dim); text-align: center;">Select items above to simulate market basket recommendations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 4: Product Warehouse Catalog & Stock Management -->
+                <div id="admin-subtab-stock" class="admin-subtab-view" style="display: none;">
+                    <div class="glass-card col-12">
+                        <div class="chart-header">
+                            <h3>Product Warehouse Catalog Management</h3>
+                            <button class="btn btn-primary" onclick="openAddProductModal()"><i class="ri-add-line"></i> Add Product</button>
+                        </div>
+
+                        <!-- Top Stock & Package Count Summary KPI Bar -->
+                        <div id="admin-stock-summary-bar" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div style="background: rgba(6, 182, 212, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(6, 182, 212, 0.2);">
+                                <div style="font-size: 10px; color: var(--primary-cyan); font-weight: 700; text-transform: uppercase;">📦 Listed Products</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--text-bright); margin-top: 2px;" id="kpi-total-products">0 Products</div>
+                            </div>
+                            <div style="background: rgba(16, 185, 129, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 10px; color: var(--accent-emerald); font-weight: 700; text-transform: uppercase;">📊 Package Stock Units</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--accent-emerald); margin-top: 2px;" id="kpi-total-stock-units">0 Units</div>
+                            </div>
+                            <div style="background: rgba(59, 130, 246, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <div style="font-size: 10px; color: #3b82f6; font-weight: 700; text-transform: uppercase;">🟢 Healthy In-Stock</div>
+                                <div style="font-size: 18px; font-weight: 800; color: #3b82f6; margin-top: 2px;" id="kpi-healthy-stock-items">0 Items</div>
+                            </div>
+                            <div style="background: rgba(245, 158, 11, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                <div style="font-size: 10px; color: #f59e0b; font-weight: 700; text-transform: uppercase;">🟠 Low Stock Warning</div>
+                                <div style="font-size: 18px; font-weight: 800; color: #f59e0b; margin-top: 2px;" id="kpi-low-stock-items">0 Items</div>
+                            </div>
+                            <div style="background: rgba(244, 63, 94, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(244, 63, 94, 0.2);">
+                                <div style="font-size: 10px; color: var(--accent-rose); font-weight: 700; text-transform: uppercase;">🔴 Out of Stock</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--accent-rose); margin-top: 2px;" id="kpi-out-of-stock-items">0 Items</div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="custom-table" id="table-admin-products">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Price ($)</th>
+                                        <th>Stock Monitoring & Maintenance</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 5: ETL Control & System Logs -->
+                <div id="admin-subtab-etl" class="admin-subtab-view" style="display: none;">
+                    <div class="charts-grid">
+                        <div class="glass-card col-6">
+                            <div class="chart-header">
+                                <h3>Data Warehouse ETL Control</h3>
+                                <span class="badge badge-cyan">ETL Engine</span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Re-seed Star Schema warehouse tables (<code>FactSales</code>, <code>DimCustomer</code>, <code>DimProduct</code>, <code>DimDate</code>, <code>DimBehavior</code>) and re-run Apriori rule mining.</p>
+                            <button class="btn btn-danger" onclick="triggerReseed()">
+                                <i class="ri-restart-line"></i> Trigger Full Warehouse ETL Re-seed
+                            </button>
+                        </div>
+
+                        <div class="glass-card col-6">
+                            <div class="chart-header">
+                                <h3>Real-Time Session Activity Feed</h3>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="pulse-dot"></div>
+                                    <span style="font-size: 12px; color: var(--accent-emerald);">Live Tracking</span>
+                                </div>
+                            </div>
+                            <div style="max-height: 180px; overflow-y: auto;" id="live-activity-feed">
+                                <!-- Dynamic Activity Logs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dedicated Real-Time Warehouse Stock & Inventory Management View -->
+            <section id="view-stock-management" class="tab-view" style="display: none;">
+                <div class="charts-grid">
+                    <div class="glass-card col-12">
+                        <div class="chart-header" style="margin-bottom: 12px;">
+                            <h3><i class="ri-box-3-line" style="color: var(--primary-cyan);"></i> Real-Time Warehouse Stock & Inventory Management</h3>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-outline" onclick="loadStockManagementView()"><i class="ri-refresh-line"></i> Refresh Stock Levels</button>
+                                <button class="btn btn-primary" onclick="openAddProductModal()"><i class="ri-add-line"></i> + Add New Product</button>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Monitor live product inventory, restock warehouse packages in real time, and track stock counts as customer orders are placed.</p>
+
+                        <!-- Top Stock & Package Count Summary KPI Bar -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div style="background: rgba(6, 182, 212, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(6, 182, 212, 0.2);">
+                                <div style="font-size: 10px; color: var(--primary-cyan); font-weight: 700; text-transform: uppercase;">📦 Listed Products</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--text-bright); margin-top: 2px;" id="sm-kpi-total-products">0 Products</div>
+                            </div>
+                            <div style="background: rgba(16, 185, 129, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 10px; color: var(--accent-emerald); font-weight: 700; text-transform: uppercase;">📊 Package Stock Units</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--accent-emerald); margin-top: 2px;" id="sm-kpi-total-stock-units">0 Units</div>
+                            </div>
+                            <div style="background: rgba(59, 130, 246, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <div style="font-size: 10px; color: #3b82f6; font-weight: 700; text-transform: uppercase;">🟢 Healthy In-Stock</div>
+                                <div style="font-size: 18px; font-weight: 800; color: #3b82f6; margin-top: 2px;" id="sm-kpi-healthy-stock-items">0 Items</div>
+                            </div>
+                            <div style="background: rgba(245, 158, 11, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                <div style="font-size: 10px; color: #f59e0b; font-weight: 700; text-transform: uppercase;">🟠 Low Stock Warning</div>
+                                <div style="font-size: 18px; font-weight: 800; color: #f59e0b; margin-top: 2px;" id="sm-kpi-low-stock-items">0 Items</div>
+                            </div>
+                            <div style="background: rgba(244, 63, 94, 0.08); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(244, 63, 94, 0.2);">
+                                <div style="font-size: 10px; color: var(--accent-rose); font-weight: 700; text-transform: uppercase;">🔴 Out of Stock</div>
+                                <div style="font-size: 18px; font-weight: 800; color: var(--accent-rose); margin-top: 2px;" id="sm-kpi-out-of-stock-items">0 Items</div>
+                            </div>
+                        </div>
+
+                        <!-- Search & Filters Bar -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap;">
+                            <div style="display: flex; gap: 8px; flex: 1; max-width: 400px;">
+                                <input type="text" class="form-input" id="stock-search-input" placeholder="Search products by ID, name, or brand..." style="font-size: 12px;" oninput="filterStockManagementTable()">
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Status Filter:</span>
+                                <select class="form-select" id="stock-filter-status" style="font-size: 12px; padding: 6px 10px;" onchange="filterStockManagementTable()">
+                                    <option value="ALL">All Products</option>
+                                    <option value="HEALTHY">🟢 In-Stock (>20)</option>
+                                    <option value="LOW">🟠 Low Stock Warning (1-20)</option>
+                                    <option value="OUT">🔴 Out of Stock (0)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="table-container">
+                            <table class="custom-table" id="table-stock-management">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Category & Brand</th>
+                                        <th>Price ($)</th>
+                                        <th>Real-Time Warehouse Stock & Status</th>
+                                        <th>Stock Maintenance Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Stock Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Volunteer Logistics Delivery View -->
+            <section id="view-volunteer-portal" class="tab-view" style="display: none;">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3>🚚 Assigned Delivery Tasks</h3>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Collect packages from Warehouse and deliver to Customer Address</p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="loadVolunteerDeliveries()"><i class="ri-refresh-line"></i> Refresh Tasks</button>
+                    </div>
+                    <div id="volunteer-deliveries-container">
+                        <!-- Dynamic Volunteer Deliveries -->
+                    </div>
+                </div>
+            </section>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Customer Profile Modal -->
+    <div class="modal-backdrop" id="modal-customer-profile">
+        <div class="modal-box" style="max-width: 850px; max-height: 88vh; overflow-y: auto;">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <h3 id="profile-modal-title"><i class="ri-user-3-line" style="color: var(--primary-cyan);"></i> Customer Account Profile & History</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeCustomerProfileModal()">✕</button>
+            </div>
+
+            <!-- Unauthenticated Guest State -->
+            <div id="profile-guest-card" class="glass-card" style="text-align: center; padding: 40px 20px; display: none;">
+                <i class="ri-user-lock-line" style="font-size: 56px; color: var(--primary-cyan); margin-bottom: 12px; display: block;"></i>
+                <h2 style="font-size: 22px; color: var(--text-bright); margin-bottom: 8px;">Customer Authentication Required</h2>
+                <p style="font-size: 14px; color: var(--text-muted); max-width: 500px; margin: 0 auto 20px auto;">
+                    Please log in or register a customer account to view your account profile details, saved addresses, and complete past order history.
+                </p>
+                <button class="btn btn-primary" onclick="closeCustomerProfileModal(); openAuthModal('login');" style="padding: 10px 24px; font-size: 14px;">
+                    <i class="ri-login-box-line"></i> Login / Register Account
+                </button>
+            </div>
+
+            <!-- Authenticated Customer Profile State -->
+            <div id="profile-content-container">
+                <!-- Customer Overview Header -->
+                <div class="glass-card" style="padding: 20px; margin-bottom: 18px;">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div id="profile-avatar-circle" style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #06b6d4, #3b82f6); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #ffffff; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);">
+                                👤
+                            </div>
+                            <div>
+                                <h2 id="profile-full-name" style="font-size: 20px; font-weight: 800; color: var(--text-bright); margin-bottom: 2px;">Customer Profile</h2>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span id="profile-email" style="font-size: 12px; color: var(--text-muted);">customer@gmail.com</span>
+                                    <span id="profile-segment-badge" style="background: rgba(6, 182, 212, 0.15); color: var(--primary-cyan); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.3);">Standard Tier</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" id="profile-btn-add-address" onclick="openAddressModal()" style="padding: 6px 12px; font-size: 11px;">
+                            <i class="ri-add-line"></i> + Add New Saved Address
+                        </button>
+                    </div>
+
+                    <!-- Customer Demographics & Account Metadata Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                        <div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Phone Number</div>
+                            <div id="profile-phone" style="font-size: 13px; font-weight: 700; color: var(--text-bright); margin-top: 2px;">+91 9876543210</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Region & Location</div>
+                            <div id="profile-region" style="font-size: 13px; font-weight: 700; color: var(--text-bright); margin-top: 2px;">Asia-Pacific</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;" id="profile-label-meta">Role & Segment</div>
+                            <div id="profile-demographics" style="font-size: 13px; font-weight: 700; color: var(--text-bright); margin-top: 2px;">Role: Customer</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Account ID</div>
+                            <div id="profile-customer-id" style="font-size: 13px; font-weight: 700; color: var(--primary-cyan); margin-top: 2px;">CUST-1001</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Summary Cards Grid -->
+                <div class="kpi-grid" style="margin-bottom: 18px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));">
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon cyan"><i class="ri-shopping-bag-line" id="profile-kpi-1-icon"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label" id="profile-kpi-1-label">Total Orders Placed</div>
+                            <div class="kpi-value" id="profile-kpi-orders">0</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon emerald"><i class="ri-money-dollar-box-line" id="profile-kpi-2-icon"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label" id="profile-kpi-2-label">Lifetime Purchase Spend</div>
+                            <div class="kpi-value" id="profile-kpi-spend">$0.00</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card">
+                        <div class="kpi-icon amber"><i class="ri-truck-line" id="profile-kpi-3-icon"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label" id="profile-kpi-3-label">Active Delivery Shipments</div>
+                            <div class="kpi-value" id="profile-kpi-active">0</div>
+                        </div>
+                    </div>
+                    <div class="glass-card kpi-card" id="profile-kpi-4-card" style="display: none;">
+                        <div class="kpi-icon cyan" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i class="ri-star-smile-fill"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">Customer Rating Score</div>
+                            <div class="kpi-value" id="profile-kpi-rating" style="color: #f59e0b;">⭐ 5.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volunteer Received Customer Reviews Section (Shown for Volunteer Agents) -->
+                <div class="glass-card" id="profile-volunteer-reviews-section" style="display: none; padding: 16px; margin-bottom: 18px; border-color: rgba(245, 158, 11, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="font-size: 15px; font-weight: 700; color: #f59e0b;">
+                            <i class="ri-star-smile-line"></i> Customer Delivery Ratings & Feedback Received
+                        </h3>
+                    </div>
+                    <div id="profile-volunteer-reviews-list">
+                        <div style="text-align: center; color: var(--text-dim); font-size: 12px; padding: 10px;">
+                            Loading customer delivery feedback...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Address Section -->
+                <div class="glass-card" style="padding: 16px; margin-bottom: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="font-size: 15px; font-weight: 700; color: var(--text-bright);" id="profile-address-title">
+                            <i class="ri-map-pin-line" style="color: var(--primary-cyan);"></i> Saved Delivery Address
+                        </h3>
+                    </div>
+                    <div id="profile-address-box" style="background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; color: var(--text-bright);">
+                        Loading saved address...
+                    </div>
+                </div>
+
+                <!-- Complete Past Order History Section -->
+                <div class="glass-card" style="padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 16px; font-weight: 800; color: var(--text-bright);" id="profile-section-history-title">
+                                <i class="ri-history-line" style="color: var(--primary-cyan);"></i> Past Order History
+                            </h3>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="profile-section-history-desc">Comprehensive record of all your past orders & delivery status</p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="loadCustomerProfileView()" style="padding: 5px 10px; font-size: 11px;">
+                            <i class="ri-refresh-line"></i> Refresh Order History
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Past Orders Container -->
+                    <div id="profile-orders-list">
+                        <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                            Loading your past order history...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-backdrop" id="modal-auth">
+        <div class="modal-box" style="max-width: 480px;">
+            <div class="chart-header" style="margin-bottom: 14px;">
+                <h3 id="modal-auth-title"><i class="ri-shield-keyhole-line" style="color: var(--primary-cyan);"></i> Shoplytics Authentication</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeAuthModal()">✕</button>
+            </div>
+
+            <!-- Mode Selection Tabs -->
+            <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+                <button type="button" class="btn btn-outline auth-mode-tab active" id="tab-auth-login" style="flex: 1; padding: 7px; font-size: 11px;" onclick="setAuthMode('login')">
+                    🔐 Sign In
+                </button>
+                <button type="button" class="btn btn-outline auth-mode-tab" id="tab-auth-signup" style="flex: 1; padding: 7px; font-size: 11px;" onclick="setAuthMode('signup')">
+                    📝 Sign Up
+                </button>
+                <button type="button" class="btn btn-outline auth-mode-tab" id="tab-auth-admin" style="flex: 1; padding: 7px; font-size: 11px; border-color: rgba(245, 158, 11, 0.4); color: #f59e0b;" onclick="setAuthMode('admin')">
+                    🔒 Admin Portal
+                </button>
+            </div>
+
+            <!-- Quick Demo Login Bar -->
+            <div id="quick-demo-bar" style="background: rgba(15, 23, 42, 0.7); padding: 10px; border-radius: 8px; margin-bottom: 14px; border: 1px solid var(--border-color);">
+                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;">
+                    ⚡ 1-Click Quick Demo Sign In:
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <button class="btn btn-outline" style="flex: 1; padding: 4px 6px; font-size: 11px;" onclick="quickDemoLogin('customer')">
+                        👤 Customer
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1; padding: 4px 6px; font-size: 11px;" onclick="quickDemoLogin('volunteer')">
+                        🚚 Volunteer
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1; padding: 4px 6px; font-size: 11px; border-color: rgba(245, 158, 11, 0.4); color: #f59e0b;" onclick="quickDemoLogin('admin')">
+                        👑 Admin
+                    </button>
+                </div>
+            </div>
+            
+            <form id="form-auth" onsubmit="handleAuthSubmit(event)">
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 11px; color: var(--text-muted);">Email Address (must end with @gmail.com)</label>
+                    <input type="email" class="form-input" id="auth-email" required style="width: 100%; margin-top: 4px;" placeholder="customer@gmail.com">
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 11px; color: var(--text-muted);">Password (min 6 digits/chars)</label>
+                    <input type="password" class="form-input" id="auth-password" required minlength="6" style="width: 100%; margin-top: 4px;" placeholder="123456">
+                </div>
+
+                <!-- Sign Up Extra Fields (Customer / Volunteer Only) -->
+                <div id="signup-extra-fields" style="display: none;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 11px; color: var(--text-muted);">Full Name</label>
+                        <input type="text" class="form-input" id="auth-fullname" style="width: 100%; margin-top: 4px;" placeholder="John Doe">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 11px; color: var(--text-muted);">Phone Number & Country Code</label>
+                        <div style="display: flex; gap: 8px; margin-top: 4px;">
+                            <select class="form-select" id="auth-country-code" style="width: 145px; font-size: 12px; padding: 6px 8px;" onchange="handleCountryCodeChange('auth-country-code', 'auth-phone', 'auth-phone-helper')">
+                                <option value="+91" data-digits="10" data-name="India">🇮🇳 India (+91)</option>
+                                <option value="+1" data-digits="10" data-name="USA/Canada">🇺🇸 USA (+1)</option>
+                                <option value="+44" data-digits="10" data-name="UK">🇬🇧 UK (+44)</option>
+                                <option value="+61" data-digits="9" data-name="Australia">🇦🇺 Aus (+61)</option>
+                                <option value="+971" data-digits="9" data-name="UAE">🇦🇪 UAE (+971)</option>
+                                <option value="+65" data-digits="8" data-name="Singapore">🇸🇬 SGP (+65)</option>
+                            </select>
+                            <input type="text" class="form-input" id="auth-phone" style="flex: 1;" placeholder="9876543210 (10 Digits)" maxlength="10" oninput="enforceCountryPhoneDigits(this, 'auth-country-code')">
+                        </div>
+                        <div id="auth-phone-helper" style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">Strictly 10 digits required for 🇮🇳 India (+91)</div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 11px; color: var(--text-muted);">Public Account Role (Admin excluded)</label>
+                        <select class="form-select" id="auth-role" style="width: 100%; margin-top: 4px;">
+                            <option value="customer">Customer Side</option>
+                            <option value="volunteer">Volunteer Side</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Admin Notice Box -->
+                <div id="admin-notice-box" style="display: none; background: rgba(245, 158, 11, 0.08); padding: 10px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3); margin-bottom: 12px;">
+                    <div style="font-size: 11px; color: #f59e0b; font-weight: 700;">
+                        🔒 Protected Admin Portal Access
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                        Access to BI Data Warehouse, ETL controls, and order dispatcher requires pre-authorized Admin credentials.
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 6px;" id="btn-auth-submit">
+                    Sign In
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 16px; font-size: 13px;">
+                <span id="auth-toggle-msg">Don't have an account?</span>
+                <a href="#" style="color: var(--primary-cyan); font-weight: 600; text-decoration: none;" onclick="toggleAuthMode(event)" id="auth-toggle-link">Register Here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details & Reviews Modal -->
+    <div class="modal-backdrop" id="modal-reviews">
+        <div class="modal-box" style="max-width: 550px;">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="font-size: 32px;" id="modal-product-img">📦</div>
+                    <div>
+                        <h3 id="modal-product-title">Product Name</h3>
+                        <div style="font-size: 12px; color: var(--text-muted);">
+                            <span id="modal-product-cat">Category</span> • <span id="modal-product-price" style="color: var(--primary-cyan); font-weight: 700;">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeProductReviewsModal()">✕</button>
+            </div>
+
+            <!-- Aggregate Rating Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <span style="font-size: 22px; font-weight: 800; color: #f59e0b;" id="modal-product-rating">⭐ 4.5</span>
+                    <span style="font-size: 12px; color: var(--text-dim); margin-left: 6px;">Average Customer Score</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="badge badge-emerald" id="modal-review-count">0 Reviews</span>
+                    <a id="modal-product-wiki-btn" href="#" target="_blank" class="btn btn-outline" style="font-size: 11px; padding: 4px 8px; color: var(--primary-cyan); border-color: rgba(6, 182, 212, 0.4); text-decoration: none;">
+                        <i class="ri-google-fill"></i> Know More on Google / Wiki
+                    </a>
+                </div>
+            </div>
+
+            <!-- Customer Reviews List -->
+            <h4 style="margin-bottom: 10px; font-size: 14px;">Customer Reviews & Feedback</h4>
+            <div id="reviews-list-container" style="max-height: 220px; overflow-y: auto; margin-bottom: 20px; padding-right: 4px;">
+                <!-- Dynamic Reviews -->
+            </div>
+
+            <!-- Delivered Order Notice Banner -->
+            <div style="border-top: 1px solid var(--border-color); padding-top: 14px; margin-top: 10px;">
+                <div style="background: rgba(6, 182, 212, 0.05); padding: 14px; border-radius: 8px; border: 1px solid rgba(6, 182, 212, 0.2); text-align: center;">
+                    <div style="font-size: 20px; color: var(--primary-cyan); margin-bottom: 4px;"><i class="ri-shield-check-line"></i></div>
+                    <div style="font-size: 13px; font-weight: 700; color: var(--text-bright);">Verified Delivered Purchase Required</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.5;">
+                        To guarantee 100% authentic ratings, customer reviews & feedback can only be submitted from the <strong>My Orders</strong> tab after your order has been delivered by our volunteer.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post-Delivery Volunteer & Product Review Modal -->
+    <div class="modal-backdrop" id="modal-post-delivery-review">
+        <div class="modal-box" style="max-width: 580px; max-height: 88vh; overflow-y: auto;">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <div>
+                    <h3><i class="ri-star-smile-line" style="color: #f59e0b;"></i> Rate Delivery Volunteer & Products</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="post-review-order-number">Order #ORD-2026-901</p>
+                </div>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closePostDeliveryReviewModal()">✕</button>
+            </div>
+
+            <form id="form-post-delivery-review" onsubmit="submitPostDeliveryReview(event)">
+                <!-- Hidden Inputs -->
+                <input type="hidden" id="post-review-order-id" value="">
+                <input type="hidden" id="post-review-volunteer-id" value="">
+
+                <!-- 1. Volunteer Rating Section -->
+                <div style="background: rgba(6, 182, 212, 0.06); padding: 14px; border-radius: 10px; border: 1px solid rgba(6, 182, 212, 0.2); margin-bottom: 18px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <div style="font-size: 24px;">🏍️</div>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 700; color: var(--text-bright);">Rate Volunteer Delivery Agent</div>
+                            <div style="font-size: 11px; color: var(--primary-cyan);" id="post-review-volunteer-name">Alex Delivery Agent</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Volunteer Rating:</label>
+                        <select class="form-select" id="post-volunteer-rating" style="width: 100%; margin-top: 4px;">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent Delivery Service)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 - Fast & Good)</option>
+                            <option value="3">⭐⭐⭐ (3 - Average)</option>
+                            <option value="2">⭐⭐ (2 - Delayed / Below Average)</option>
+                            <option value="1">⭐ (1 - Unprofessional / Poor)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Volunteer Feedback / Comments:</label>
+                        <textarea class="form-input" id="post-volunteer-comment" rows="2" style="width: 100%; margin-top: 4px; font-family: inherit; resize: vertical;" placeholder="How was your delivery experience with the volunteer? (Politeness, speed, care)..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 2. Purchased Products Rating Section -->
+                <div style="margin-bottom: 18px;">
+                    <h4 style="font-size: 13px; margin-bottom: 10px; color: var(--text-bright); display: flex; align-items: center; gap: 6px;">
+                        <i class="ri-shopping-bag-line" style="color: var(--accent-emerald);"></i> Rate Ordered Product(s)
+                    </h4>
+                    <div id="post-products-review-container" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- Dynamic items ratings -->
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="ri-check-double-line"></i> Submit Volunteer & Product Ratings
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Checkout Modal -->
+
+    <div class="modal-backdrop" id="modal-checkout">
+        <div class="modal-box" style="max-width: 520px; max-height: 88vh; overflow-y: auto;">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <h3><i class="ri-shopping-cart-checkout-line" style="color: var(--primary-cyan);"></i> Order Checkout & Delivery Details</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeCheckoutModal()">✕</button>
+            </div>
+
+            <form onsubmit="handleCheckoutSubmit(event)">
+                <!-- Order Summary Box -->
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border-color);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
+                        Order Items Summary:
+                    </div>
+                    <div id="checkout-items-summary" style="max-height: 120px; overflow-y: auto; margin-bottom: 10px;">
+                        <!-- Dynamic Checkout Items -->
+                    </div>
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 8px; display: flex; justify-content: space-between; font-weight: 700; font-size: 14px;">
+                        <span>Total Payable:</span>
+                        <span id="checkout-total-amount" style="color: var(--accent-emerald);">$0.00</span>
+                    </div>
+                </div>
+
+                <!-- Customer Delivery Location Input -->
+                <div style="margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                            <i class="ri-map-pin-line" style="color: var(--primary-cyan);"></i> Delivery Address / Location:
+                        </label>
+                        <div style="display: flex; gap: 6px;">
+                            <button type="button" class="btn btn-outline" style="padding: 3px 8px; font-size: 10px; color: var(--primary-cyan); border-color: rgba(6, 182, 212, 0.4);" onclick="detectGPSLocation()" title="Auto-detect current GPS coordinates">
+                                <i class="ri-gps-line"></i> 📍 GPS Detect
+                            </button>
+                            <button type="button" class="btn btn-outline" style="padding: 3px 8px; font-size: 10px; color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.4);" onclick="previewCheckoutMap()" title="View entered address on real-time Google Maps">
+                                <i class="ri-map-pin-2-line"></i> 🗺️ Live Map
+                            </button>
+                        </div>
+                    </div>
+                    <textarea class="form-input" id="checkout-address" rows="3" required style="width: 100%; font-family: inherit; resize: vertical;" placeholder="Enter your full street address, apartment number, city, and zip code..."></textarea>
+                </div>
+
+                <!-- Phone Input with Country Code Selector & Dynamic Country Rules -->
+                <div style="margin-bottom: 18px;">
+                    <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                        <i class="ri-phone-line" style="color: var(--primary-cyan);"></i> Contact Phone Number:
+                    </label>
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                        <select class="form-select" id="checkout-country-code" style="width: 145px; font-size: 12px; padding: 6px 8px;" onchange="handleCountryCodeChange('checkout-country-code', 'checkout-phone', 'checkout-phone-helper')">
+                            <option value="+91" data-digits="10" data-name="India">🇮🇳 India (+91)</option>
+                            <option value="+1" data-digits="10" data-name="USA/Canada">🇺🇸 USA (+1)</option>
+                            <option value="+44" data-digits="10" data-name="UK">🇬🇧 UK (+44)</option>
+                            <option value="+61" data-digits="9" data-name="Australia">🇦🇺 Aus (+61)</option>
+                            <option value="+971" data-digits="9" data-name="UAE">🇦🇪 UAE (+971)</option>
+                            <option value="+65" data-digits="8" data-name="Singapore">🇸🇬 SGP (+65)</option>
+                        </select>
+                        <input type="text" class="form-input" id="checkout-phone" required style="flex: 1;" value="9876543210" placeholder="9876543210 (10 Digits)" maxlength="10" oninput="enforceCountryPhoneDigits(this, 'checkout-country-code')">
+                    </div>
+                    <div id="checkout-phone-helper" style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">Strictly 10 digits required for 🇮🇳 India (+91)</div>
+                </div>
+
+                <!-- Payment Option Selection Tabs -->
+                <div style="margin-bottom: 18px;">
+                    <label style="font-size: 12px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 6px;">
+                        <i class="ri-bank-card-line" style="color: var(--primary-cyan);"></i> Select Payment Method:
+                    </label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <button type="button" class="btn btn-outline payment-tab-btn active" id="tab-pay-upi" style="flex: 1; padding: 8px; font-size: 12px;" onclick="switchPaymentTab('upi')">
+                            <i class="ri-qr-code-line"></i> UPI Payment
+                        </button>
+                        <button type="button" class="btn btn-outline payment-tab-btn" id="tab-pay-card" style="flex: 1; padding: 8px; font-size: 12px;" onclick="switchPaymentTab('card')">
+                            <i class="ri-visa-line"></i> Card
+                        </button>
+                        <button type="button" class="btn btn-outline payment-tab-btn" id="tab-pay-cod" style="flex: 1; padding: 8px; font-size: 12px;" onclick="switchPaymentTab('cod')">
+                            <i class="ri-hand-coin-line"></i> COD
+                        </button>
+                    </div>
+
+                    <!-- UPI Payment Section -->
+                    <div id="pay-section-upi" style="background: rgba(6, 182, 212, 0.05); padding: 14px; border-radius: 8px; border: 1px solid rgba(6, 182, 212, 0.2);">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--primary-cyan); margin-bottom: 10px;">
+                            📱 Option 1: Scan UPI QR Code to Pay
+                        </div>
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <img id="upi-qr-image" src="" alt="UPI QR Code" style="width: 150px; height: 150px; border-radius: 8px; border: 2px solid var(--primary-cyan); padding: 4px; background: white;">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                                Scan with Google Pay, PhonePe, Paytm, or BHIM UPI
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 10px;">
+                            <div style="font-size: 12px; font-weight: 700; color: var(--primary-cyan); margin-bottom: 6px;">
+                                📲 Option 2: Enter UPI ID (Send Payment Collect Request)
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" class="form-input" id="checkout-upi-id" style="flex: 1;" placeholder="e.g. user@okaxis or 9876543210@paytm" value="customer@okaxis">
+                                <button type="button" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;" onclick="sendUpiCollectRequest()">
+                                    Send Request
+                                </button>
+                            </div>
+                            <div id="upi-request-status" style="font-size: 11px; margin-top: 6px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Card Payment Section with Credit/Debit & Networks -->
+                    <div id="pay-section-card" style="display: none; background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px;">
+                            💳 Select Card Type & Network:
+                        </div>
+
+                        <!-- Card Type Selector -->
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                            <button type="button" class="btn btn-outline card-type-btn active" id="card-type-credit" style="flex: 1; padding: 5px; font-size: 11px;" onclick="selectCardCategory('Credit')">
+                                Credit Card
+                            </button>
+                            <button type="button" class="btn btn-outline card-type-btn" id="card-type-debit" style="flex: 1; padding: 5px; font-size: 11px;" onclick="selectCardCategory('Debit')">
+                                Debit Card
+                            </button>
+                        </div>
+
+                        <!-- Card Networks Badges -->
+                        <div style="display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;" id="card-network-badges">
+                            <span class="badge card-brand-badge active" id="brand-visa" style="cursor: pointer;" onclick="selectCardNetwork('Visa')">💳 Visa</span>
+                            <span class="badge card-brand-badge" id="brand-mastercard" style="cursor: pointer;" onclick="selectCardNetwork('Mastercard')">💳 Mastercard</span>
+                            <span class="badge card-brand-badge" id="brand-rupay" style="cursor: pointer;" onclick="selectCardNetwork('RuPay')">💳 RuPay</span>
+                            <span class="badge card-brand-badge" id="brand-amex" style="cursor: pointer;" onclick="selectCardNetwork('Amex')">💳 Amex</span>
+                        </div>
+
+                        <div style="margin-bottom: 8px; position: relative;">
+                            <input type="text" class="form-input" id="card-number" placeholder="Card Number (e.g. 4532 9876 5432 1098)" style="width: 100%; padding-right: 40px;" value="4532 9876 5432 1098" maxlength="19" oninput="formatAndDetectCard(this)">
+                            <span id="detected-card-icon" style="position: absolute; right: 10px; top: 10px; font-size: 16px;">💳</span>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                            <input type="text" class="form-input" id="card-expiry" placeholder="MM/YY" style="flex: 1;" value="12/28" maxlength="5">
+                            <input type="text" class="form-input" id="card-cvv" placeholder="CVV" style="flex: 1;" value="432" maxlength="4">
+                        </div>
+
+                        <!-- Real-time Card Validation & Type Preview Container -->
+                        <div id="card-realtime-preview" style="background: rgba(15, 23, 42, 0.6); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--primary-cyan); font-size: 12px;">💳 Credit Card (Visa)</strong>
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--text-bright); margin-top: 2px; letter-spacing: 1px;">4532 **** **** 1098</div>
+                                </div>
+                                <span class="badge badge-emerald" style="font-size: 10px;">✓ Card Valid</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COD Payment Section -->
+                    <div id="pay-section-cod" style="display: none; background: rgba(16, 185, 129, 0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <div style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">
+                            💵 Cash on Delivery Selected
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                            Pay exact cash amount to the assigned delivery volunteer agent upon package arrival.
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="btn-submit-order">
+                    <i class="ri-check-double-line"></i> Confirm & Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Live Google Maps Tracking Modal -->
+    <div class="modal-backdrop" id="modal-live-map">
+        <div class="modal-box" style="max-width: 720px; width: 92%;">
+            <div class="chart-header" style="margin-bottom: 14px;">
+                <h3 id="map-modal-title"><i class="ri-map-pin-2-line" style="color: var(--primary-cyan);"></i> Real-Time Google Maps & GPS Tracking</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeGoogleMapModal()">✕</button>
+            </div>
+
+            <!-- Live Details Bar -->
+            <div style="background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 8px; margin-bottom: 14px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <div style="font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;" id="map-modal-label">Delivery Location</div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--primary-cyan); margin-top: 2px;" id="map-modal-address">742 Evergreen Terrace</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Order #: <span id="map-modal-order" style="color: var(--text-bright);">ORD-2026-901</span></div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="text-align: right;">
+                        <span class="badge badge-cyan" id="map-modal-status">In Transit</span>
+                        <div style="font-size: 11px; color: var(--accent-emerald); margin-top: 4px; font-weight: 600;" id="map-modal-gps-badge">
+                            <i class="ri-pulse-line"></i> GPS Live Active
+                        </div>
+                    </div>
+                    <a id="map-external-link" href="#" target="_self" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                        <i class="ri-external-link-line"></i> Open in Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Interactive Address Search & Live GPS Tracker Control Bar -->
+            <div style="background: rgba(255, 255, 255, 0.03); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 200px;">
+                    <input type="text" class="form-input" id="map-modal-custom-address" placeholder="Enter street address, city, or GPS coordinates..." style="font-size: 11px; padding: 6px 10px; width: 100%;" onkeydown="if(event.key==='Enter') updateMapCustomAddress()">
+                </div>
+                <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;" onclick="updateMapCustomAddress()">
+                    <i class="ri-search-line"></i> Search Location
+                </button>
+                <button type="button" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px; background: linear-gradient(135deg, #06b6d4, #3b82f6);" onclick="trackModalLiveGps()">
+                    <i class="ri-gps-line"></i> 🎯 Track My Live GPS
+                </button>
+                <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 11px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);" onclick="simulateVolunteerGpsRoute()">
+                    <i class="ri-radar-line"></i> 🛵 Live Route GPS
+                </button>
+            </div>
+
+            <!-- Live GPS Status & Trajectory Indicator Bar -->
+            <div id="map-modal-live-status-bar" style="display: none; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 11px; color: var(--primary-cyan);">
+                <i class="ri-radar-line animate-spin"></i> <span id="map-modal-live-status-text">Detecting real-time satellite GPS coordinates...</span>
+            </div>
+
+            <!-- Embedded Interactive Google Map -->
+            <div style="position: relative; width: 100%; height: 310px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); background: #0f172a;">
+                <iframe id="google-map-iframe" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; color: var(--text-muted);">
+                <span><i class="ri-radar-line" style="color: var(--primary-cyan);"></i> Live Satellite Trajectory & GPS Route Tracking</span>
+                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="closeGoogleMapModal()">Close Map</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Customer Order Record Manifest Modal -->
+    <div class="modal-backdrop" id="modal-admin-order-record">
+        <div class="modal-box" style="max-width: 780px; width: 94%;">
+            <div class="chart-header" style="margin-bottom: 14px;">
+                <h3><i class="ri-file-list-3-line" style="color: var(--primary-cyan);"></i> Customer Order Dispatch Record Manifest</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeAdminOrderRecordModal()">✕</button>
+            </div>
+            
+            <div id="admin-order-record-content">
+                <!-- Dynamically populated order record details -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Amazon Product Specifications & Color/Size Variant Modal -->
+    <div class="modal-backdrop" id="modal-product-details">
+        <div class="modal-box" style="max-width: 720px; width: 92%;">
+            <div class="chart-header" style="margin-bottom: 14px;">
+                <h3><i class="ri-information-line" style="color: var(--primary-cyan);"></i> Product Specifications & Customization</h3>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;" onclick="closeProductDetailsModal()">✕</button>
+            </div>
+
+            <div id="product-details-content" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px;">
+                <!-- Left Column: Product Image & Rating -->
+                <div>
+                    <div id="pdetails-img-container" style="width: 100%; height: 220px; border-radius: 10px; background: rgba(15,23,42,0.8); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 72px; overflow: hidden; margin-bottom: 12px;">
+                        📦
+                    </div>
+                    <div style="text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="color: #f59e0b; font-weight: 700; font-size: 14px;" id="pdetails-rating">⭐ 4.8 / 5.0</div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="pdetails-reviews-count">257 Verified Customer Reviews</div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 8px; font-size: 11px; color: #f59e0b; border-color: rgba(245,158,11,0.4);" id="pdetails-view-reviews-btn">
+                            ⭐ Read All Customer Reviews
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Specs, Colors, Sizes, Price & Actions -->
+                <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <span class="badge badge-cyan" id="pdetails-category" style="margin-bottom: 6px; display: inline-block;">Category</span>
+                        <h2 id="pdetails-name" style="font-size: 17px; color: var(--text-bright); margin-bottom: 6px; line-height: 1.3;">Product Name</h2>
+                        
+                        <div style="font-size: 20px; font-weight: 800; color: var(--primary-cyan); margin-bottom: 12px;" id="pdetails-price">
+                            $99.99
+                        </div>
+
+                        <!-- Colour Selector Swatches -->
+                        <div style="margin-bottom: 12px;">
+                            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase;">
+                                Colour: <span id="pdetails-selected-color" style="color: var(--text-bright); font-weight: 700;">Midnight Green</span>
+                            </label>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="pdetails-colors-container">
+                                <!-- Dynamic Color Swatches -->
+                            </div>
+                        </div>
+
+                        <!-- Size / Variant Selector Pills -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase;">
+                                Size / Variant: <span id="pdetails-selected-size" style="color: var(--text-bright); font-weight: 700;">6GB + 128GB</span>
+                            </label>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="pdetails-sizes-container">
+                                <!-- Dynamic Variant Pills -->
+                            </div>
+                        </div>
+
+                        <!-- Technical Specifications Table -->
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 14px;">
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-cyan); text-transform: uppercase; margin-bottom: 6px;">
+                                📋 Key Technical Specifications
+                            </div>
+                            <div style="display: grid; grid-template-columns: 130px 1fr; gap: 4px; font-size: 11px;" id="pdetails-specs-grid">
+                                <!-- Dynamic Specs Pairs -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" style="flex: 1; justify-content: center; padding: 8px 12px; font-size: 12px;" id="pdetails-add-cart-btn">
+                            <i class="ri-shopping-cart-line"></i> Add to Cart
+                        </button>
+                        <button class="btn btn-outline" style="flex: 1; justify-content: center; padding: 8px 12px; font-size: 12px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);" id="pdetails-save-later-btn">
+                            🔖 Save for Later
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/tracker.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/recommendations.js"></script>
+    <script src="js/rfmChart.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

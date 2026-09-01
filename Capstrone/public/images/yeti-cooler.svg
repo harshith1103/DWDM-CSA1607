@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradYeti" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="yetiBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="yetiLid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="rubberLatch" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadowY" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#bgGradYeti)"/>
+  
+  <!-- Cool Ice Glow -->
+  <circle cx="300" cy="240" r="180" fill="#38bdf8" opacity="0.1" filter="blur(30px)"/>
+
+  <!-- Shadow Base -->
+  <ellipse cx="300" cy="385" rx="210" ry="25" fill="#000" opacity="0.5"/>
+
+  <!-- Main YETI Cooler Container -->
+  <g filter="url(#shadowY)">
+    <!-- Side Heavy Rope Handles (Left & Right) -->
+    <path d="M 80 230 C 50 230, 50 280, 85 280 L 110 260" fill="none" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 520 230 C 550 230, 550 280, 515 280 L 490 260" fill="none" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Main Rotomolded Cooler Body -->
+    <rect x="105" y="160" width="390" height="195" rx="20" fill="url(#yetiBody)" stroke="#cbd5e1" stroke-width="2"/>
+
+    <!-- Bottom Non-Slip Feet -->
+    <rect x="130" y="355" width="50" height="10" rx="4" fill="url(#rubberLatch)"/>
+    <rect x="420" y="355" width="50" height="10" rx="4" fill="url(#rubberLatch)"/>
+
+    <!-- Heavy Duty Lid -->
+    <rect x="98" y="120" width="404" height="52" rx="14" fill="url(#yetiLid)" stroke="#94a3b8" stroke-width="2"/>
+
+    <!-- Center YETI Embossed Logo -->
+    <rect x="235" y="195" width="130" height="38" rx="6" fill="#0f172a"/>
+    <text x="300" y="222" text-anchor="middle" fill="#ffffff" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="22" letter-spacing="3">YETI</text>
+
+    <!-- Heavy-Duty T-Rex Rubber Latches (2 Front Latches) -->
+    <!-- Latch 1 (Left) -->
+    <path d="M 165 155 L 175 155 L 175 220 C 175 225, 165 225, 165 220 Z" fill="url(#rubberLatch)" stroke="#000" stroke-width="1"/>
+    <circle cx="170" cy="180" r="7" fill="#64748b"/>
+    
+    <!-- Latch 2 (Right) -->
+    <path d="M 425 155 L 435 155 L 435 220 C 435 225, 425 225, 425 220 Z" fill="url(#rubberLatch)" stroke="#000" stroke-width="1"/>
+    <circle cx="430" cy="180" r="7" fill="#64748b"/>
+
+    <!-- Drain Plug Accent -->
+    <circle cx="470" cy="305" r="9" fill="url(#rubberLatch)" stroke="#64748b" stroke-width="1.5"/>
+  </g>
+
+  <!-- Performance Badge Overlay -->
+  <g transform="translate(410, 45)">
+    <rect width="150" height="32" rx="16" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="75" y="21" text-anchor="middle" fill="#7dd3fc" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11">🧊 PERMAFROST ICE</text>
+  </g>
+</svg>

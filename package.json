@@ -1,0 +1,14 @@
+{
+  "name": "dwdm-csa1607",
+  "version": "1.0.0",
+  "description": "DWDM Project - Shoplytics E-Commerce & Analytics Platform",
+  "main": "Capstrone/server.js",
+  "scripts": {
+    "start": "node Capstrone/server.js",
+    "postinstall": "cd Capstrone && npm install",
+    "seed": "cd Capstrone && npm run seed"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

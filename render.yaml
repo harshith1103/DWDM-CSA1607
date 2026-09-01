@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: shoplytics-dwdm
+    env: node
+    buildCommand: npm run postinstall
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
